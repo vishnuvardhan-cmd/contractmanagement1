@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	<bean id="supplier1" class="com.contractmanagement.roleselection1.Supplier" />
+	<bean id="contractadmin" class="com.contractmanagement.roleselection1.ContractAdmin" />
+	<bean id="contractrequirement" class="com.contractmanagement.roleselection1.ContractRequirement" />
+	<bean id="porposal1" class="com.contractmanagement.roleselection1.SupplierProposal"/>
+	<bean id="createcontract" class="com.contractmanagement.roleselection1.CreateContract"/>
+ 
+	<!-- Add support for component scanning -->
+	<context:component-scan base-package="com.contractmanagement.controle">
+	</context:component-scan>
+
+	<!--Add support for conversion, formatting and validation -->
+	<mvc:annotation-driven />
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	<bean id="ds"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/mydb"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="Vishnu143#"></property>
+	</bean>
+
+	<bean id="jt" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	<bean id="supplierrowmapper" class="com.contractmanagement.supplierdao.SupplierRowMapper">
+		<property name="supplier" ref="supplier1" />
+	</bean>
+	<bean id="dao" class="com.contractmanagement.supplierdao.SupplierDAOImpl">
+		<property name="jdbcTemplate" ref="jt"></property>
+		<property name="supplier" ref="supplier1" />
+		<property name="rowMapper" ref="supplierrowmapper" />
+	</bean>
+	<bean id="contractAdminRowMapper" class="com.contractmanagement.contractadmindao.ContractAdminRowMapper">
+		<property name="contractAdmin" ref="contractadmin" />
+	</bean>
+	<bean id="dao1"
+		class="com.contractmanagement.contractadmindao.ContractAdminDAOImpl">
+		<property name="jdbcTemplate" ref="jt"></property>
+		<property name="contractAdmin" ref="contractadmin" />
+		<property name="rowMapper" ref="contractAdminRowMapper" />
+	</bean>
+	<bean id="dao2"
+		class="com.contractmanagement.contractrequirementdao.ContractRequirementDAOImpl">
+		<property name="jdbcTemplate" ref="jt"></property>
+		<property name="requirement" ref="contractrequirement" />
+	</bean>
+	<bean id="dao3"
+		class="com.contractmanagement.supplierproposaldao.SupplierProposalDAOImpl">
+		<property name="jdbcTemplate" ref="jt"></property>
+		<property name="proposal" ref="porposal1" />
+	</bean>
+	<bean id="dao4"
+		class="com.contractmanagement.createcontractdao.CreateContractDAOImpl">
+		<property name="jdbcTemplate" ref="jt"></property>
+		<property name="cc" ref="createcontract" />
+	</bean>
+</beans>
